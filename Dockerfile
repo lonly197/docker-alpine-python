@@ -1,4 +1,4 @@
-FROM lonly/alpine:3.6-slim
+FROM lonly/docker-alpine:3.6-slim
 
 ARG VERSION=3.6.3
 ARG BUILD_DATE
@@ -25,6 +25,8 @@ RUN	set -x \
     && PYTHON_VERSION=${VERSION} \
     && PIP_VERSION=9.0.1 \
     && GPG_KEY=0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
+    ## Update apk
+    && apk update \
     ## Install base package
     && apk add --no-cache --upgrade --virtual=build-dependencies gnupg libressl xz \
     ## Download python pacage
