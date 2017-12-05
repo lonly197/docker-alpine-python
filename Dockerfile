@@ -1,4 +1,4 @@
-FROM lonly/alpine:3.6-slim
+FROM lonly/docker-alpine:3.6-slim
 
 ARG VERSION=3.6-slim
 ARG BUILD_DATE
