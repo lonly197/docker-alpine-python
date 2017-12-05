@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM lonly/alpine:3.6-slim
 
 ARG VERSION=3.6-slim
 ARG BUILD_DATE
@@ -30,23 +30,15 @@ ENV	PATH=/usr/local/bin:$PATH \
 RUN	set -x \
     ## Define Variant
     && PYTHON_VERSION=3.6.3-r9 \
-    ## Add Aliyun repo
-    && echo http://mirrors.aliyun.com/alpine/v3.6/main/ >> /etc/apk/repositories \
-    && echo http://mirrors.aliyun.com/alpine/v3.6/community/>> /etc/apk/repositories \
-    ## Update apk package
-    && apk update \
-    ## Install base package
-    && apk add --no-cache --upgrade --virtual=build-dependencies bash curl \
     ## Install Python package
     && apk add --no-cache --upgrade  --repository http://mirrors.ustc.edu.cn/alpine/v3.6/edge/ --allow-untrusted python3 \
     && python3 -m ensurepip \
     && rm -r /usr/lib/python*/ensurepip \
     && pip3 install --upgrade pip setuptools \
     && if [[ ! -e /usr/bin/pip ]]; then ln -s pip3 /usr/bin/pip ; fi \
-    && if [[ ! -e /usr/bin/python-config ]]; then ln -sf /usr/bin/python3.6-config /usr/bin/python-config; fi \
     && if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi \
     ## Cleanup
-    && apk del build-dependencies \
+    && rm -rf /root/.cache \
     && rm -rf *.tgz *.tar *.zip \
     && rm -rf /var/cache/apk/* \
     && rm -rf /tmp/*
