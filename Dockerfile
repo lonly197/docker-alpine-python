@@ -1,6 +1,6 @@
 FROM alpine:3.6
 
-ARG VERSION=3.6.3
+ARG VERSION=3.6-slim
 ARG BUILD_DATE
 ARG VCS_REF
 
@@ -11,17 +11,21 @@ LABEL \
     org.label-schema.license="Apache License 2.0" \
     org.label-schema.name="lonly/docker-alpine-python" \
     org.label-schema.url="https://github.com/lonly197" \
-    org.label-schema.description="This is a Base and Clean Docker Image for R Programming Language." \
+    org.label-schema.description="This is a Base and Clean Docker Image for Python Programming Language." \
     org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url="https://github.com/lonly197/docker-alpine-r" \
+    org.label-schema.vcs-url="https://github.com/lonly197/docker-alpine-python" \
     org.label-schema.vcs-type="Git" \
     org.label-schema.vendor="lonly197@qq.com" \
     org.label-schema.version=$VERSION \
     org.label-schema.schema-version="1.0"
 
 # Define environment 
-ENV	JAVA_HOME=/usr/lib/jvm/default-jvm \
-    PATH=$PATH:${JAVA_HOME}:${JAVA_HOME}/bin:${JAVA_HOME}/jre:${JAVA_HOME}/jre/bin
+## Ensure local python is preferred over distribution python
+ENV	PATH=/usr/local/bin:$PATH \
+    ## http://bugs.python.org/issue19846
+    ## > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
+    LANG=C.UTF-8 \
+    GPG_KEY=0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 
 # Install packages
 RUN	set -x \
@@ -31,24 +35,17 @@ RUN	set -x \
     ## Update apk package
     && apk update \
     ## Install base package
-    && apk add --no-cache --upgrade bash curl libressl-dev curl-dev libxml2-dev gcc g++ git coreutils ncurses \
-    ## Install R package
-    && apk add --no-cache --upgrade R R-dev R-doc \
-    ## R bindings to the libgit2 library
-    && git clone https://github.com/ropensci/git2r.git \
-    && R CMD INSTALL --configure-args="--with-libssl-include=/usr/lib/" git2r \
-    ## Install R dev related package
-    && R -q -e "install.packages('knitr', repos='https://cloud.r-project.org')" \
-    && R -q -e "install.packages('ggplot2', repos='https://cloud.r-project.org')" \
-    && R -q -e "install.packages('googleVis', repos='https://cloud.r-project.org')" \
-    && R -q -e "install.packages('data.table', repos='https://cloud.r-project.org')" \
-    && R -q -e "install.packages('devtools', repos='https://cloud.r-project.org')" \
-    && R -q -e "install.packages('covr', repos='https://cloud.r-project.org')" \
-    && R -q -e "install.packages('roxygen2', repos='https://cloud.r-project.org')" \
-    && R -q -e "install.packages('testthat', repos='https://cloud.r-project.org')" \
-    && R -q -e "install.packages('Rcpp', repos='https://cloud.r-project.org')" \
-    && Rscript -e "library('devtools'); library('Rcpp'); install_github('ramnathv/rCharts')" \
+    && apk add --no-cache --upgrade --virtual=build-dependencies bash curl \
+    ## Install Python package
+    && apk add --no-cache --upgrade python3=3.6 \
+    && python3 -m ensurepip \
+    && rm -r /usr/lib/python*/ensurepip && \
+    pip3 install --upgrade pip setuptools && \
+    && if [[ ! -e /usr/bin/pip ]]; then ln -s pip3 /usr/bin/pip ; fi \
+    && if [[ ! -e /usr/bin/python-config ]]; then ln -sf /usr/bin/python3.6-config /usr/bin/python-config; fi \
+    && if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi \
     ## Cleanup
+    && apk del build-dependencies \
     && rm -rf *.tgz *.tar *.zip \
     && rm -rf /var/cache/apk/* \
     && rm -rf /tmp/*
