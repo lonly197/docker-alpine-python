@@ -24,11 +24,12 @@ LABEL \
 ENV	PATH=/usr/local/bin:$PATH \
     ## http://bugs.python.org/issue19846
     ## > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-    LANG=C.UTF-8 \
-    GPG_KEY=0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
+    LANG=C.UTF-8
 
 # Install packages
 RUN	set -x \
+    ## Define Variant
+    && PYTHON_VERSION=3.6.3-r9 \
     ## Add Aliyun repo
     && echo http://mirrors.aliyun.com/alpine/v3.6/main/ >> /etc/apk/repositories \
     && echo http://mirrors.aliyun.com/alpine/v3.6/community/>> /etc/apk/repositories \
@@ -37,10 +38,10 @@ RUN	set -x \
     ## Install base package
     && apk add --no-cache --upgrade --virtual=build-dependencies bash curl \
     ## Install Python package
-    && apk add --no-cache --upgrade python3=3.6 \
+    && apk add --no-cache --upgrade  --repository http://mirrors.ustc.edu.cn/alpine/v3.6/edge/ --allow-untrusted python3 \
     && python3 -m ensurepip \
-    && rm -r /usr/lib/python*/ensurepip && \
-    pip3 install --upgrade pip setuptools && \
+    && rm -r /usr/lib/python*/ensurepip \
+    && pip3 install --upgrade pip setuptools \
     && if [[ ! -e /usr/bin/pip ]]; then ln -s pip3 /usr/bin/pip ; fi \
     && if [[ ! -e /usr/bin/python-config ]]; then ln -sf /usr/bin/python3.6-config /usr/bin/python-config; fi \
     && if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi \
