@@ -8,7 +8,7 @@
 docker build --build-arg VCS_REF=`git rev-parse --short HEAD` \
 --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 --rm \
--t lonly/docker-alpine-python:3.6.3-slim .
+-t lonly/docker-alpine-python:3.6.3-ml .
 ```
 
 ## Usage

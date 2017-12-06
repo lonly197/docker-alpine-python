@@ -1,6 +1,6 @@
-FROM lonly/docker-alpine:3.6-slim
+FROM lonly/docker-alpine-python:3.6.3
 
-ARG VERSION=3.6-slim
+ARG VERSION=3.6.3-ml
 ARG BUILD_DATE
 ARG VCS_REF
 
@@ -19,27 +19,15 @@ LABEL \
     org.label-schema.version=$VERSION \
     org.label-schema.schema-version="1.0"
 
-# Define environment 
-## Ensure local python is preferred over distribution python
-ENV	PATH=/usr/local/bin:$PATH \
-    ## http://bugs.python.org/issue19846
-    ## > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-    LANG=C.UTF-8
-
 # Install packages
 RUN	set -x \
 	## Update apk
 	&& apk update \
-    ## Define Variant
-    && PYTHON_VERSION=3.6.3-r9 \	
-    ## Install Python package
-    && apk add --no-cache --upgrade  --repository http://mirrors.ustc.edu.cn/alpine/v3.6/edge/ --allow-untrusted python3 \
-    && python3 -m ensurepip \
-    && rm -r /usr/lib/python*/ensurepip \
-    && pip3 install --upgrade pip setuptools \
-    && if [[ ! -e /usr/bin/pip ]]; then ln -s pip3 /usr/bin/pip ; fi \
-    && if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi \
+    ## Install Mache
+    && pip install --upgrade --no-cache-dir numpy pandas scipy scikit-learn matploylib seaborn \
     ## Cleanup
+    && find /usr/lib/python3.*/ -name __pycache__ | xargs rm -r \
+    && find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + \
     && rm -rf /root/.cache \
     && rm -rf *.tgz *.tar *.zip \
     && rm -rf /var/cache/apk/* \
