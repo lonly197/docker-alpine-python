@@ -114,7 +114,7 @@ RUN	set -x \
 	&& rm -rf get-pip.py \
     ## Add pip repo
     && mkdir ~/.pip \
-    && printf $'[global] \nindex-url = hindex-url = http://mirrors.aliyun.com/pypi/simple/ \n[install] \ntrusted-host=mirrors.aliyun.com \ndisable-pip-version-check = true \ntimeout = 6000' >> ~/.pip/pip.conf \
+    && printf $'[global] \nindex-url = http://mirrors.aliyun.com/pypi/simple/ \n[install] \ntrusted-host=mirrors.aliyun.com \ndisable-pip-version-check = true \ntimeout = 6000' >> ~/.pip/pip.conf \
     ## Cleanup
     && apk del build-dependencies \
     && rm -rf /var/cache/apk/* \
