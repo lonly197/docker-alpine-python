@@ -23,7 +23,7 @@ LABEL \
 RUN	set -x \
 	## Update apk
 	&& apk update \
-    && apk add --no-cache --upgrade --virtual=build-dependencies ca-certificates \
+    && apk add --no-cache --upgrade --virtual=build-dependencies ca-certificates g++ gfortran musl-dev python3-dev \
     ## Update ca-cert
     && update-ca-certificates \
     ## fix 'RuntimeError: Broken toolchain: cannot link a simple C program'
