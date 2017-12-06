@@ -23,9 +23,15 @@ LABEL \
 RUN	set -x \
 	## Update apk
 	&& apk update \
+    && apk add --no-cache --upgrade --virtual=build-dependencies ca-certificates \
+    ## Update ca-cert
+    && update-ca-certificates \
+    ## fix 'RuntimeError: Broken toolchain: cannot link a simple C program'
+    && export ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future \
     ## Install Mache
     && pip install --upgrade --no-cache-dir numpy pandas scipy scikit-learn matploylib seaborn \
     ## Cleanup
+    && apk del build-dependencies \
     && find /usr/lib/python3.*/ -name __pycache__ | xargs rm -r \
     && find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + \
     && rm -rf /root/.cache \
