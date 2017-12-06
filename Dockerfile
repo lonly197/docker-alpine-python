@@ -28,8 +28,10 @@ ENV	PATH=/usr/local/bin:$PATH \
 
 # Install packages
 RUN	set -x \
+	## Update apk
+	&& apk update \
     ## Define Variant
-    && PYTHON_VERSION=3.6.3-r9 \
+    && PYTHON_VERSION=3.6.3-r9 \	
     ## Install Python package
     && apk add --no-cache --upgrade  --repository http://mirrors.ustc.edu.cn/alpine/v3.6/edge/ --allow-untrusted python3 \
     && python3 -m ensurepip \
