@@ -8,15 +8,15 @@
 
 > Please use corresponding branches from this repo to play with code.
 
-- __3.6.3__
-- __3.6.3-slim__
+- __3.6.3 = 3.6 = 3 = latest__
+- __3.6.3-slim = 3.6-slim = 3-slim__
 
 ## Usage
 
 Create a Dockerfile in your Python app 
 
 ```docker
-FROM python:3
+FROM lonly/docker-alpine-python:3
 
 WORKDIR /usr/src/app
 
