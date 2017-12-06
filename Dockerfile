@@ -30,8 +30,8 @@ RUN	set -x \
     ## Install base package
     && apk add --no-cache --upgrade --virtual=build-dependencies gnupg libressl xz \
     ## Download python pacage
-    && wget -O -q python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-	&& wget -O -q python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
+    && wget -O -q -c python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
+	&& wget -O -q -c python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
     ## Verify python package
     && export GNUPGHOME="$(mktemp -d)" \
 	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
@@ -99,7 +99,7 @@ RUN	set -x \
 	&& ln -s python3 python \
 	&& ln -s python3-config python-config \
     ## Download pip
-    && wget -O -q get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+    && wget -O -q -c get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     ## Install pip
     && python get-pip.py \
 		--disable-pip-version-check \
