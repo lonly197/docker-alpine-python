@@ -1,6 +1,6 @@
 # docker-alpine-python
 
-> This Docker Image for building or running Python  applications, basee on Alpine.
+> This Docker Image for building or running Python  applications, which basee on Alpine.
 
 ## Usage
 
