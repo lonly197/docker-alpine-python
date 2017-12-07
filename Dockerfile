@@ -53,8 +53,8 @@ RUN	set -x \
             seaborn \
     ## Cleanup
     && apk del build-dependencies \
-    && find /usr/lib/python3.6 -name __pycache__ | xargs rm -r \
-    && find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + \
+    # && find /usr/lib/python3.6 -name __pycache__ | xargs rm -r \
+    # && find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + \
     && rm -rf /root/.cache \
     && rm -rf *.tgz *.tar *.zip \
     && rm -rf /var/cache/apk/* \
