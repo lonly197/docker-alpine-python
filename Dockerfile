@@ -35,7 +35,11 @@ RUN	set -x \
 	&& wget -q -c -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
     ## Verify python package
     && export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
+	# && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
+    ## fix "gpg: keyserver receive failed: Address not available"
+    && ( gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
+        || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEY" \
+        || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEY" ) \
 	&& gpg --batch --verify python.tar.xz.asc python.tar.xz \
 	&& rm -rf "$GNUPGHOME" python.tar.xz.asc \
     ## Install python
