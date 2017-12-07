@@ -28,7 +28,8 @@ RUN	set -x \
     ## Update apk
     && apk update \
     ## Install base package
-    && apk add --no-cache --upgrade --virtual=build-dependencies gnupg libressl xz \
+    && apk add --no-cache --upgrade --virtual=build-dependencies ca-certificates gnupg libressl xz \
+    && update-ca-certificates \
     ## Download python pacage
     && wget -q -c -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
 	&& wget -q -c -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
