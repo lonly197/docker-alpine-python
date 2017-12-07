@@ -23,13 +23,16 @@ LABEL \
 RUN	set -x \
 	## Update apk
 	&& apk update \
+    ## Install base package
     && apk add --no-cache --upgrade --virtual=build-dependencies ca-certificates g++ gfortran musl-dev python3-dev \
     ## Update ca-cert
     && update-ca-certificates \
     ## fix 'RuntimeError: Broken toolchain: cannot link a simple C program'
     && export ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future \
-    ## Install Mache
-    && pip install --upgrade --no-cache-dir numpy pandas scipy scikit-learn matploylib seaborn \
+    ## Link locale.h
+    && ln -s locale.h /usr/include/xlocale.h \
+    ## Install machine learning package
+    && pip install --upgrade --no-cache-dir numpy pandas scipy scikit-learn matplotlib seaborn \
     ## Cleanup
     && apk del build-dependencies \
     && find /usr/lib/python3.*/ -name __pycache__ | xargs rm -r \
